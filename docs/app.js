@@ -169,6 +169,11 @@ document.getElementById("squares-form").addEventListener("submit", function (eve
     var outputSection = document.getElementById("grid-output");
     outputSection.innerHTML = "";  // Clear any previous grid
 
+    // Heading above the grid (visible in web view and print)
+    var heading = document.createElement("h2");
+    heading.textContent = "Super Bowl Squares";
+    outputSection.appendChild(heading);
+
     // Show info about name distribution
     var info = document.createElement("small");
     info.id = "grid-info";
