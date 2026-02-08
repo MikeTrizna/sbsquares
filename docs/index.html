@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Bowl Squares</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <h1>Super Bowl Squares</h1>
+
+        <form id="squares-form">
+            <label for="names-input">
+                Player Names (one per line)
+                <textarea id="names-input" rows="10"
+                    placeholder="Enter names, one per line..."></textarea>
+            </label>
+
+            <div class="grid">
+                <label for="col-team-input">
+                    Column Team
+                    <input type="text" id="col-team-input" placeholder="e.g. Chiefs">
+                </label>
+                <label for="row-team-input">
+                    Row Team
+                    <input type="text" id="row-team-input" placeholder="e.g. Eagles">
+                </label>
+            </div>
+
+            <label for="seed-input">
+                Random Seed
+                <input type="number" id="seed-input" value="2025"
+                    placeholder="Enter a number for reproducible results">
+            </label>
+            <small>Same seed + same names = same grid every time</small>
+
+            <button type="submit">Generate Grid</button>
+        </form>
+
+        <section id="grid-output" hidden>
+            <!-- Grid table will be injected here by JavaScript -->
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

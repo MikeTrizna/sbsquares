@@ -1,0 +1,34 @@
+/* Grid table: equal-width columns, compact cells */
+#grid-output table {
+    table-layout: fixed;
+    text-align: center;
+}
+
+#grid-output th,
+#grid-output td {
+    padding: 0.4rem;
+    font-size: 0.85rem;
+    word-wrap: break-word;
+}
+
+#grid-output thead th {
+    font-weight: bold;
+}
+
+/* Empty top-left corner cell */
+#grid-output thead th:first-child {
+    background: transparent;
+}
+
+/* Team name labels */
+.team-label {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+}
+
+/* Info text below the form (e.g. "10 names × 10 squares each") */
+#grid-info {
+    margin-bottom: 1rem;
+}
