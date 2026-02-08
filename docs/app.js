@@ -157,6 +157,10 @@ document.getElementById("squares-form").addEventListener("submit", function (eve
     // Generate the grid: shuffle the name list first, then cycle that
     // shuffled order to fill all 100 cells. This way the repeating pattern
     // is consistent (e.g. C,A,B,C,A,B,...) rather than randomly scattered.
+    // Save original order before shuffling — needed for the share link so
+    // recipients re-run the same shuffle. (.slice() copies an array in JS,
+    // like Python's list.copy() or list[:])
+    var originalNames = names.slice();
     var rng = mulberry32(seed);
     shuffleArray(names, rng);
     var filled = fillSquares(names);
@@ -201,7 +205,7 @@ document.getElementById("squares-form").addEventListener("submit", function (eve
     shareBtn.className = "share-btn secondary";  // Pico "secondary" = outline style
     shareBtn.addEventListener("click", function () {
         var shareParams = new URLSearchParams();
-        shareParams.set("names", names.join(","));
+        shareParams.set("names", originalNames.join(","));
         shareParams.set("seed", seed.toString());
         if (colTeam) shareParams.set("colTeam", colTeam);
         if (rowTeam) shareParams.set("rowTeam", rowTeam);
