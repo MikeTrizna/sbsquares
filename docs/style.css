@@ -59,7 +59,7 @@
     }
 
     /* Hide everything except the grid table */
-    #squares-form, h1, #grid-info, .print-btn {
+    #squares-form, h1, #grid-info, .print-btn, .share-btn {
         display: none !important;
     }
 

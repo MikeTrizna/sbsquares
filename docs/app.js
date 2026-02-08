@@ -191,5 +191,50 @@ document.getElementById("squares-form").addEventListener("submit", function (eve
     printBtn.addEventListener("click", function () { window.print(); });
     outputSection.appendChild(printBtn);
 
+    // "Copy Share Link" button — builds a URL with the current inputs as
+    // query parameters so anyone opening the link sees the same grid.
+    // Uses navigator.clipboard API (like Python's pyperclip.copy()).
+    var shareBtn = document.createElement("button");
+    shareBtn.textContent = "Copy Share Link";
+    shareBtn.className = "share-btn secondary";  // Pico "secondary" = outline style
+    shareBtn.addEventListener("click", function () {
+        var shareParams = new URLSearchParams();
+        shareParams.set("names", names.join(","));
+        shareParams.set("seed", seed.toString());
+        if (colTeam) shareParams.set("colTeam", colTeam);
+        if (rowTeam) shareParams.set("rowTeam", rowTeam);
+        var shareUrl = window.location.origin + window.location.pathname + "?" + shareParams.toString();
+        navigator.clipboard.writeText(shareUrl).then(function () {
+            shareBtn.textContent = "Copied!";
+            setTimeout(function () { shareBtn.textContent = "Copy Share Link"; }, 2000);
+        });
+    });
+    outputSection.appendChild(shareBtn);
+
     outputSection.hidden = false;
 });
+
+// --- URL parameter support ---
+// URLSearchParams is a built-in browser API for reading query strings.
+// Similar to Python's urllib.parse.parse_qs(). If the URL contains
+// ?names=Mike,Alice,Bob&seed=2026, we pre-fill the form and auto-generate.
+var params = new URLSearchParams(window.location.search);
+if (params.has("names")) {
+    // Names are comma-separated in the URL; convert to newline-separated for the textarea
+    document.getElementById("names-input").value = params.get("names").split(",").join("\n");
+}
+if (params.has("seed")) {
+    document.getElementById("seed-input").value = params.get("seed");
+}
+if (params.has("colTeam")) {
+    document.getElementById("col-team-input").value = params.get("colTeam");
+}
+if (params.has("rowTeam")) {
+    document.getElementById("row-team-input").value = params.get("rowTeam");
+}
+// If names were provided via URL, auto-generate the grid immediately.
+// dispatchEvent fires the "submit" event, which triggers our existing handler
+// above — no need to duplicate any logic.
+if (params.has("names")) {
+    document.getElementById("squares-form").dispatchEvent(new Event("submit"));
+}
