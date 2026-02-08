@@ -154,10 +154,12 @@ document.getElementById("squares-form").addEventListener("submit", function (eve
         return;
     }
 
-    // Generate the grid
-    var filled = fillSquares(names);
+    // Generate the grid: shuffle the name list first, then cycle that
+    // shuffled order to fill all 100 cells. This way the repeating pattern
+    // is consistent (e.g. C,A,B,C,A,B,...) rather than randomly scattered.
     var rng = mulberry32(seed);
-    shuffleArray(filled, rng);
+    shuffleArray(names, rng);
+    var filled = fillSquares(names);
 
     // Build and display the table
     var outputSection = document.getElementById("grid-output");
