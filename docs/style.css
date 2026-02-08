@@ -20,7 +20,7 @@
     background: transparent;
 }
 
-/* Team name labels */
+/* Column team name label (spans across the top of the table) */
 .team-label {
     text-align: center;
     font-weight: bold;
@@ -28,7 +28,54 @@
     font-size: 1.1rem;
 }
 
+/* Row team name label (rotated 90° CCW in its own column on the left) */
+/* writing-mode makes the text flow vertically, then rotate(180deg) flips
+   it so it reads bottom-to-top. This is more print-friendly than using
+   transform: rotate(-90deg) because the cell sizes itself naturally. */
+.row-team-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    padding: 0.5rem;
+}
+
 /* Info text below the form (e.g. "10 names × 10 squares each") */
 #grid-info {
     margin-bottom: 1rem;
+}
+
+/* --- Print styles --- */
+/* When the user clicks "Print Grid", the browser's print dialog opens.
+   These rules make the output a clean, full-page landscape PDF.
+   @page is a CSS at-rule that controls printed page properties —
+   no Python equivalent, this is browser/print-specific. */
+@media print {
+    @page {
+        size: landscape;
+        margin: 0.5in;
+    }
+
+    /* Hide everything except the grid table */
+    #squares-form, h1, #grid-info, .print-btn {
+        display: none !important;
+    }
+
+    /* Remove Pico's container max-width so the table fills the page */
+    .container {
+        max-width: none;
+        padding: 0;
+    }
+
+    /* Make the table fill the available page width */
+    #grid-output table {
+        width: 100%;
+    }
+
+    /* Ensure grid section is visible when printing */
+    #grid-output {
+        display: block !important;
+    }
 }

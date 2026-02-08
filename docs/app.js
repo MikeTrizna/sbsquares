@@ -45,14 +45,24 @@ function fillSquares(names) {
 }
 
 // --- Build the 10x10 table as a DOM element ---
+// The table has an optional extra column on the left for the row team label,
+// and an optional extra row on top for the column team label.
 function buildTable(squares, colTeam, rowTeam) {
     var table = document.createElement("table");
+    // Total columns: 10 name cols + 1 digit col + (1 row-team col if rowTeam)
+    var hasRowTeam = rowTeam && rowTeam.length > 0;
+    var totalCols = hasRowTeam ? 12 : 11;
 
     // --- Column team label row (spans across the top) ---
     if (colTeam) {
         var colLabelRow = document.createElement("tr");
+        if (hasRowTeam) {
+            // Empty cell above the row-team column
+            var spacer = document.createElement("th");
+            colLabelRow.appendChild(spacer);
+        }
         var colLabelCell = document.createElement("th");
-        colLabelCell.colSpan = 11;          // 1 corner + 10 digit columns
+        colLabelCell.colSpan = 11;   // corner + 10 digit columns
         colLabelCell.textContent = colTeam;
         colLabelCell.className = "team-label";
         colLabelRow.appendChild(colLabelCell);
@@ -62,13 +72,17 @@ function buildTable(squares, colTeam, rowTeam) {
         table.appendChild(labelHead);
     }
 
-    // --- Header row: empty corner + digits 0-9 ---
+    // --- Header row: digits 0-9 ---
     var thead = document.createElement("thead");
     var headerRow = document.createElement("tr");
 
-    // If there's a row team name, put it in the corner cell
+    if (hasRowTeam) {
+        // Empty cell above the row-team column
+        var spacer2 = document.createElement("th");
+        headerRow.appendChild(spacer2);
+    }
+    // Empty corner cell (above row digit headers)
     var cornerCell = document.createElement("th");
-    cornerCell.textContent = rowTeam || "";
     headerRow.appendChild(cornerCell);
 
     for (var col = 0; col < 10; col++) {
@@ -84,6 +98,15 @@ function buildTable(squares, colTeam, rowTeam) {
     var tbody = document.createElement("tbody");
     for (var row = 0; row < 10; row++) {
         var tr = document.createElement("tr");
+
+        // On the first row, add the row team label spanning all 10 rows
+        if (row === 0 && hasRowTeam) {
+            var rowTeamCell = document.createElement("th");
+            rowTeamCell.rowSpan = 10;
+            rowTeamCell.className = "row-team-label";
+            rowTeamCell.textContent = rowTeam;
+            tr.appendChild(rowTeamCell);
+        }
 
         var rowHeader = document.createElement("th");
         rowHeader.scope = "row";
@@ -158,5 +181,15 @@ document.getElementById("squares-form").addEventListener("submit", function (eve
     outputSection.appendChild(info);
 
     outputSection.appendChild(buildTable(filled, colTeam, rowTeam));
+
+    // Add a print button so users can save/print the grid as a landscape PDF.
+    // window.print() opens the browser's native print dialog, which includes
+    // "Save as PDF" on all modern browsers. No library needed.
+    var printBtn = document.createElement("button");
+    printBtn.textContent = "Print Grid";
+    printBtn.className = "print-btn";
+    printBtn.addEventListener("click", function () { window.print(); });
+    outputSection.appendChild(printBtn);
+
     outputSection.hidden = false;
 });
